@@ -2,7 +2,6 @@
 #
 class pyenv::dependencies::debian {
   if ! defined(Package['build-essential'])      { package { 'build-essential':      ensure => installed } }
-  if ! defined(Package['libreadline6'])         { package { 'libreadline6':         ensure => installed } }
   if ! defined(Package['libreadline6-dev'])     { package { 'libreadline6-dev':     ensure => installed } }
   if ! defined(Package['zlib1g'])               { package { 'zlib1g':               ensure => installed } }
   if ! defined(Package['zlib1g-dev'])           { package { 'zlib1g-dev':           ensure => installed } }
