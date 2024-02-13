@@ -40,6 +40,7 @@ define pyenv::compile(
     path        => $path,
     logoutput   => 'on_failure',
     provider    => 'bash',
+    refreshonly => true,
   }
 
   if $global {
