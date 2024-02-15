@@ -8,7 +8,7 @@ Puppet::Type.type(:exec).provide :bash, :parent => :shell do
 
   def run(command, check = false)
     puts 'Run bash command `' + command + '`'
-    output = su('-', resource[:user], '-c', command)
+    output = su('-s', '/bin/bash', '-', resource[:user], '-c', command)
     return output, output
   end
 end
