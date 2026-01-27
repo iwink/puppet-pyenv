@@ -1,13 +1,12 @@
 # == Class pyenv::install
 #
-define pyenv::install(
+define pyenv::install (
   $user  = $title,
   $group = $user,
   $home  = '',
   $root  = '',
   $rc    = '.profile'
 ) {
-
   $home_path = $home ? { '' => "/home/${user}", default => $home }
   $root_path = $root ? { '' => "${home_path}/.pyenv", default => $root }
 
@@ -34,7 +33,7 @@ define pyenv::install(
   }
 
   @file { $shrc:
-    ensure => present,
+    ensure => file,
     owner  => $user,
     group  => $group,
   }

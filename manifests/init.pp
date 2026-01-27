@@ -7,7 +7,7 @@
 #   - pyenv::compile to compile a python version for a specific user
 #
 class pyenv {
-  if ! defined( Class['pyenv::dependencies'] ) {
+  if ! defined( Class['pyenv::dependencies']) {
     require pyenv::dependencies
   }
 }

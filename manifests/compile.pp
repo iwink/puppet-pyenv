@@ -1,6 +1,6 @@
 # The following part compiles and installs the chosen python version.
 #
-define pyenv::compile(
+define pyenv::compile (
   $user,
   $python,
   $group   = $user,
@@ -8,7 +8,6 @@ define pyenv::compile(
   $root    = '',
   $global  = false,
 ) {
-
   $home_path = $home ? { '' => "/home/${user}", default => $home }
   $root_path = $root ? { '' => "${home_path}/.pyenv", default => $root }
 
@@ -16,7 +15,7 @@ define pyenv::compile(
   $shims       = "${root_path}/shims"
   $versions    = "${root_path}/versions"
   $global_path = "${root_path}/version"
-  $path        = [ $shims, $bin, '/bin', '/usr/bin' ]
+  $path        = [$shims, $bin, '/bin', '/usr/bin']
 
   exec { "pyenv::compile ${user} ${python}":
     command   => "pyenv install ${python}",
@@ -28,7 +27,7 @@ define pyenv::compile(
     path      => $path,
     logoutput => 'on_failure',
     notify    => Exec["pyenv::rehash ${user} ${python}"],
-    provider  => 'bash'
+    provider  => 'bash',
   }
 
   exec { "pyenv::rehash ${user} ${python}":
@@ -36,7 +35,7 @@ define pyenv::compile(
     user        => $user,
     group       => $group,
     cwd         => $home_path,
-    environment => [ "HOME=${home_path}" ],
+    environment => ["HOME=${home_path}"],
     path        => $path,
     logoutput   => 'on_failure',
     provider    => 'bash',
@@ -49,7 +48,7 @@ define pyenv::compile(
       content => "${python}\n",
       owner   => $user,
       group   => $group,
-      require => Exec["pyenv::compile ${user} ${python}"]
+      require => Exec["pyenv::compile ${user} ${python}"],
     }
   }
 }
