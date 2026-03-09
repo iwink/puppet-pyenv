@@ -1,9 +1,8 @@
-# Setup dependencies depends on os family
-#
+# @summary Install OS-specific build dependencies for pyenv.
 class pyenv::dependencies {
   case $facts['os']['family'] {
-    'debian'         : { require pyenv::dependencies::debian }
-    'redhat'         : { require pyenv::dependencies::redhat }
+    'Debian'       : { require pyenv::dependencies::debian    }
+    'RedHat'       : { require pyenv::dependencies::redhat    }
     default        : { notice("Could not load dependencies for ${facts['os']['family']}") }
   }
 }

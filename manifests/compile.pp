@@ -1,12 +1,29 @@
-# The following part compiles and installs the chosen python version.
+# @summary Compiles and installs a Python version using pyenv.
 #
-define pyenv::compile (
-  $user,
-  $python,
-  $group   = $user,
-  $home    = '',
-  $root    = '',
-  $global  = false,
+# @param user
+#   The user to compile Python for.
+# @param python
+#   The Python version to compile (e.g. '3.7.3').
+# @param group
+#   The group for the pyenv installation.
+# @param home
+#   Home directory of the user. Defaults to /home/$user.
+# @param root
+#   Root directory for pyenv. Defaults to $home/.pyenv.
+# @param global
+#   Whether to set this version as the pyenv global default.
+# @param environment
+#   Optional environment variables for the compile exec, e.g.
+#   ['CONFIGURE_OPTS=--with-openssl=/usr/local/openssl-1.1'].
+#
+define pyenv::compile(
+  String $user,
+  String $python,
+  String $group                = $user,
+  String $home                 = '',
+  String $root                 = '',
+  Boolean $global              = false,
+  Array[String] $environment   = [],
 ) {
   $home_path = $home ? { '' => "/home/${user}", default => $home }
   $root_path = $root ? { '' => "${home_path}/.pyenv", default => $root }
@@ -17,17 +34,20 @@ define pyenv::compile (
   $global_path = "${root_path}/version"
   $path        = [$shims, $bin, '/bin', '/usr/bin']
 
+  $compile_env = ["HOME=${home_path}"] + $environment
+
   exec { "pyenv::compile ${user} ${python}":
-    command   => "pyenv install ${python}",
-    timeout   => 0,
-    user      => $user,
-    group     => $group,
-    cwd       => $home_path,
-    creates   => "${versions}/${python}",
-    path      => $path,
-    logoutput => 'on_failure',
-    notify    => Exec["pyenv::rehash ${user} ${python}"],
-    provider  => 'bash',
+    command     => "pyenv install ${python}",
+    timeout     => 0,
+    user        => $user,
+    group       => $group,
+    cwd         => $home_path,
+    creates     => "${versions}/${python}",
+    path        => $path,
+    environment => $compile_env,
+    logoutput   => 'on_failure',
+    notify      => Exec["pyenv::rehash ${user} ${python}"],
+    provider    => 'bash',
   }
 
   exec { "pyenv::rehash ${user} ${python}":
