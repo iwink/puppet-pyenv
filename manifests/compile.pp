@@ -25,7 +25,6 @@ define pyenv::compile(
   Boolean $global              = false,
   Array[String] $environment   = [],
 ) {
-
   $home_path = $home ? { '' => "/home/${user}", default => $home }
   $root_path = $root ? { '' => "${home_path}/.pyenv", default => $root }
 
@@ -33,7 +32,7 @@ define pyenv::compile(
   $shims       = "${root_path}/shims"
   $versions    = "${root_path}/versions"
   $global_path = "${root_path}/version"
-  $path        = [ $shims, $bin, '/bin', '/usr/bin' ]
+  $path        = [$shims, $bin, '/bin', '/usr/bin']
 
   $compile_env = ["HOME=${home_path}"] + $environment
 
@@ -56,7 +55,7 @@ define pyenv::compile(
     user        => $user,
     group       => $group,
     cwd         => $home_path,
-    environment => [ "HOME=${home_path}" ],
+    environment => ["HOME=${home_path}"],
     path        => $path,
     logoutput   => 'on_failure',
     provider    => 'bash',
@@ -69,7 +68,7 @@ define pyenv::compile(
       content => "${python}\n",
       owner   => $user,
       group   => $group,
-      require => Exec["pyenv::compile ${user} ${python}"]
+      require => Exec["pyenv::compile ${user} ${python}"],
     }
   }
 }
